@@ -1,5 +1,5 @@
 ﻿using System.Drawing;
-using System.Windows.Forms;
+
 
 namespace StarWars
 {
@@ -57,26 +57,6 @@ namespace StarWars
             _Position.X -= _Speed.X;
             if (_Position.X < 0)
                 _Position.X = Game.Width + _Size.Width;
-        }
-    }
-
-    class Asteroid : GameObject
-    {
-        public Asteroid(Point Position, Point Speed, Size Size)
-            : base(Position, Speed, Size)
-        {
-
-        }
-
-        public override void Draw()
-        {
-            var g = Game.Buffer.Graphics;
-            Image acteroidImage = Image.FromFile(@"..\..\asteroid.png");
-            g.DrawImage(acteroidImage, new Point[] {
-                new Point(_Position.X, _Position.Y),
-                new Point(_Position.X + 20, _Position.Y),
-                new Point(_Position.X, _Position.Y - 20)
-            });
         }
     }
 }

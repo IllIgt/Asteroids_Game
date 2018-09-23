@@ -35,7 +35,7 @@ namespace StarWars
 
             for (var i =0; i < __GameObjects.Length/2; i++)
             {
-                __GameObjects[i] = new GameObject(
+                __GameObjects[i] = new Asteroid(
                     new Point(600, i * 20), 
                     new Point(15 - i, 15 - i), 
                     new Size(20, 20));

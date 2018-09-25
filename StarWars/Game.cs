@@ -92,6 +92,8 @@ namespace StarWars
             foreach (var asteroid in __Asteroids)
             {
                 asteroid.Update();
+                if (asteroid.Collision(__Bullet))
+                    System.Media.SystemSounds.Hand.Play();
             }
 
             __Bullet.Update();

@@ -49,6 +49,7 @@
     <Compile Include="GameObjects\Bullet.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameObjects\GameObject.cs" />
+    <Compile Include="ICollision.cs" />
     <Compile Include="LoginWindow.cs">
       <SubType>Form</SubType>
     </Compile>

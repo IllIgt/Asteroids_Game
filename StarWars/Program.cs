@@ -14,6 +14,11 @@ namespace StarWars
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            //Application.Run(new SplashScreen());
+
+            //Application.Run(new LoginWindow());
+
+            #region Game Logic
             Form game_form = new Form()
             {
                 Width = 800,
@@ -29,6 +34,8 @@ namespace StarWars
             Game.Draw();
 
             Application.Run(game_form);
+
+            #endregion
         }
     }
 }

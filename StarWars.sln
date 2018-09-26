@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27428.2005
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarWars", "StarWars\StarWars.csproj", "{541E7319-417F-4F77-A699-74B2D8809321}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Workers", "Workers\Workers.csproj", "{FACFC742-BFEA-4968-B258-473EC3B51A48}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{541E7319-417F-4F77-A699-74B2D8809321}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{541E7319-417F-4F77-A699-74B2D8809321}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{541E7319-417F-4F77-A699-74B2D8809321}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FACFC742-BFEA-4968-B258-473EC3B51A48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FACFC742-BFEA-4968-B258-473EC3B51A48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FACFC742-BFEA-4968-B258-473EC3B51A48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FACFC742-BFEA-4968-B258-473EC3B51A48}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

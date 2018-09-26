@@ -1,14 +1,21 @@
-﻿using System;
+﻿using StarWars.Interfaces;
 using System.Drawing;
 
 
 namespace StarWars
 {
-    class Bullet : GameObject
+    class Bullet : GameObject, IRegenerable
     {
+        public Point RegenerationPoint => new Point(0, 200);
+
         public Bullet(Point Position, Size Size) : base(Position, new Point(), Size)
         {
+ 
+        }
 
+        public void Regenerate()
+        {
+            _Position = RegenerationPoint;
         }
 
         public override void Draw()

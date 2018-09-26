@@ -21,8 +21,22 @@ namespace StarWars
 
         public static void Init(Form form)
         {
+
+            try
+            {
+                if (form.Width > 1000 || form.Height > 1000 || form.Width < 0 || form.Height < 0)
+                    throw new ArgumentOutOfRangeException();
+            }
+            catch (ArgumentOutOfRangeException e)
+            {
+                Console.WriteLine("Недопустимый размер окна");
+                form.Width = 800;
+                form.Height = 600;
+            }
+
             Width = form.Width;
             Height = form.Height;
+
             __Context = BufferedGraphicsManager.Current;
 
             var graphics = form.CreateGraphics();
@@ -56,8 +70,13 @@ namespace StarWars
                     new Point(-speed, speed),
                     new Size(speed, speed));
             }
-            __Bullet = new Bullet(new Point(0, 200), new Size(4, 1));
-            
+            const int bullet_x = 0;
+            const int bullet_y = 200;
+       
+            if (bullet_x < 0 || bullet_x > 1000 || bullet_y < 0 || bullet_y > 1000)
+                throw new ObjectOutOfWindowException("Объект создан за пределами экрана");
+
+            __Bullet = new Bullet(new Point(bullet_x, bullet_y), new Size(4, 1));    
         }
 
         private static void OnTimerTick(object Sender, EventArgs e)
@@ -84,6 +103,7 @@ namespace StarWars
 
         private static void Update()
         {
+
             foreach (var game_object in __GameObjects)
             {
                 game_object.Update();
@@ -93,7 +113,11 @@ namespace StarWars
             {
                 asteroid.Update();
                 if (asteroid.Collision(__Bullet))
+                {
                     System.Media.SystemSounds.Hand.Play();
+                    __Bullet.Regenerate();
+                    asteroid.Regenerate();
+                }    
             }
 
             __Bullet.Update();

@@ -26,16 +26,6 @@ namespace StarWars
         }
 
         public abstract void Draw();
-
-        public virtual void Update()
-        {
-            _Position.X += _Speed.X;
-            _Position.Y += _Speed.Y;
-            if (_Position.X < 0 || _Position.X > Game.Width - _Size.Width)
-                _Speed.X *= -1;
-            if (_Position.Y < 0 || _Position.Y > Game.Height - _Size.Height) 
-                _Speed.Y *= -1;
-        }
-
+        public abstract void Update();
     }
 }

@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace StarWars
 {
-    class Asteroid : GameObject, ICloneable
+    class Asteroid : GameObject, ICloneable, IComparable<Asteroid>, IEquatable<Asteroid>
     {
         private static readonly Image _AsteroidImage = Image.FromFile(@"src\asteroid.png");
 
@@ -24,6 +25,22 @@ namespace StarWars
         public object Clone()
         {
             return new Asteroid(_Position, _Speed, _Size) { Power = Power };
+        }
+
+        public int CompareTo(Asteroid other)
+        {
+            if (other == null) throw new ArgumentNullException(nameof(other));
+
+            return Comparer<int>.Default.Compare(Power, other.Power);
+        }
+
+        public bool Equals(Asteroid other)
+        {
+            if (other == null) return false;
+            return Power == other.Power
+                && _Position == other._Position
+                && _Speed == other._Speed
+                && _Size == other._Size;
         }
     }
 }

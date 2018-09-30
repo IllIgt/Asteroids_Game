@@ -12,6 +12,7 @@ namespace StarWars
         private static GameObject[] __GameObjects;
         private static Asteroid[] __Asteroids;
         private static Bullet __Bullet;
+        public static Ship __Ship;
 
         public static BufferedGraphics Buffer { get; private set; }
         
@@ -23,12 +24,35 @@ namespace StarWars
         {
             Width = form.Width;
             Height = form.Height;
+            form.KeyDown += OnGameFormKeyDown;
+
             __Context = BufferedGraphicsManager.Current;
 
             var graphics = form.CreateGraphics();
             Buffer = __Context.Allocate(graphics, new Rectangle(0, 0, Width, Height));
             __Timer.Tick += OnTimerTick;
             __Timer.Enabled = true;
+        }
+
+        private static void OnGameFormKeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.ControlKey:
+                    __Bullet = new Bullet(__Ship.Rect.Location, new Size(4, 1));
+                    break;
+                case Keys.Up:
+                    __Ship.Up();
+                    break;
+                case Keys.Down:
+                    __Ship.Down();
+                    break;
+#if DEBUG
+                case Keys.W:
+                    __Ship.Die();
+                    break;
+#endif
+            }
         }
 
         public static void Load()
@@ -57,7 +81,27 @@ namespace StarWars
                     new Size(speed, speed));
             }
             __Bullet = new Bullet(new Point(0, 200), new Size(4, 1));
-            
+            __Ship = new Ship(400);
+            __Ship.ShipDie += OnShipDie;   
+        }
+
+        private static void OnShipDie(object sender, EventArgs e)
+        {
+            __Ship = null;
+            __Timer.Enabled = false;
+            var g = Buffer.Graphics;
+            g.Clear(Color.DarkBlue);
+            g.DrawString(
+                "Game Over",
+                new Font(
+                    FontFamily.GenericSansSerif, 
+                    60, 
+                    FontStyle.Bold | FontStyle.Underline),
+                Brushes.White,
+                200, 100);
+
+
+            Buffer.Render();
         }
 
         private static void OnTimerTick(object Sender, EventArgs e)
@@ -74,10 +118,12 @@ namespace StarWars
             foreach (var game_object in __GameObjects)
                 game_object.Draw();
 
-            foreach (var asteroid in __Asteroids)
-                asteroid.Draw();
+            for (var i = 0; i < __Asteroids.Length; i++)
+                __Asteroids[i]?.Draw();
 
-            __Bullet.Draw();
+            __Bullet?.Draw();
+
+            __Ship?.Draw();
 
             Buffer.Render();
         }
@@ -89,14 +135,30 @@ namespace StarWars
                 game_object.Update();
             }
 
-            foreach (var asteroid in __Asteroids)
+            for (var i = 0; i < __Asteroids.Length; i++)
             {
+                var asteroid = __Asteroids[i];
+                if (asteroid == null) continue;
                 asteroid.Update();
-                if (asteroid.Collision(__Bullet))
+                if (__Bullet != null && asteroid.Collision(__Bullet))
+                {
+                    __Asteroids[i] = null;
+                    __Bullet = null;
                     System.Media.SystemSounds.Hand.Play();
+                    continue;
+                }
+
+                if (__Ship != null && asteroid.Collision(__Ship))
+                {
+                    var rnd = new Random();
+                    __Ship.Energy -= rnd.Next(1, 10);
+                    if (__Ship.Energy <= 0) __Ship.Die();
+                }
             }
 
-            __Bullet.Update();
+            __Bullet?.Update();
+
+
         }
 
 

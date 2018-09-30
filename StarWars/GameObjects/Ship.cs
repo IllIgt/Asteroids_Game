@@ -10,6 +10,9 @@ namespace StarWars
     class Ship : GameObject
     {
         public event EventHandler ShipDie;
+        public event EventHandler ShipMedicate;
+
+        protected virtual void OnShipMedicate(EventArgs e) => ShipMedicate?.Invoke(this, e);
         protected virtual void OnShipDie(EventArgs e) => ShipDie?.Invoke(this, e);
 
         public int Energy { get; set; } = 100;
@@ -39,6 +42,11 @@ namespace StarWars
         public void Die()
         {
             OnShipDie(EventArgs.Empty);
+        }
+
+        public void Medicate()
+        {
+            OnShipMedicate(EventArgs.Empty);
         }
     }
 }

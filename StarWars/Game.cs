@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StarWars.GameObjects;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -12,7 +13,9 @@ namespace StarWars
         private static GameObject[] __GameObjects;
         private static Asteroid[] __Asteroids;
         private static Bullet __Bullet;
-        public static Ship __Ship;
+        private static Ship __Ship;
+        private static MedKit __MedKit;
+        private static Logger logger;
 
         public static BufferedGraphics Buffer { get; private set; }
         
@@ -57,6 +60,13 @@ namespace StarWars
 
         public static void Load()
         {
+            logger = new Logger();
+            var console_logger = new ConsoleMessageLogger();
+            var file_logger = new FileMessageLogger("game.log");
+            logger.AddObserver(console_logger.LogMessage);
+            logger.AddObserver(file_logger.FileLogMessage);
+
+
             const int objects_count = 30;
             __GameObjects = new GameObject[objects_count];
 
@@ -79,10 +89,20 @@ namespace StarWars
                     new Point(100, rnd.Next(0, Height)),
                     new Point(-speed, speed),
                     new Size(speed, speed));
+                logger.LoggerProcess("Asteroid was created");
             }
             __Bullet = new Bullet(new Point(0, 200), new Size(4, 1));
+            logger.LoggerProcess("Bullet was created");
+            __MedKit = new MedKit(400);
             __Ship = new Ship(400);
-            __Ship.ShipDie += OnShipDie;   
+            logger.LoggerProcess("Ship was created");
+            __Ship.ShipDie += OnShipDie;
+            __Ship.ShipMedicate += OnShipMedicate;
+        }
+
+        private static void OnShipMedicate(object sender, EventArgs e)
+        {
+            __Ship.Energy += 10;
         }
 
         private static void OnShipDie(object sender, EventArgs e)
@@ -125,6 +145,8 @@ namespace StarWars
 
             __Ship?.Draw();
 
+            __MedKit?.Draw();
+
             Buffer.Render();
         }
 
@@ -143,6 +165,7 @@ namespace StarWars
                 if (__Bullet != null && asteroid.Collision(__Bullet))
                 {
                     __Asteroids[i] = null;
+                    logger.LoggerProcess("Asteroid was destroyed");
                     __Bullet = null;
                     System.Media.SystemSounds.Hand.Play();
                     continue;
@@ -151,13 +174,28 @@ namespace StarWars
                 if (__Ship != null && asteroid.Collision(__Ship))
                 {
                     var rnd = new Random();
-                    __Ship.Energy -= rnd.Next(1, 10);
-                    if (__Ship.Energy <= 0) __Ship.Die();
+                    var damage = rnd.Next(1, 50);
+                    __Ship.Energy -= damage;
+                    logger.LoggerProcess($"ship was damaged by {damage} current Energy = {__Ship.Energy}");
+                    if (__Ship.Energy <= 0)
+                    {
+                        __Ship.Die();
+                        logger.LoggerProcess("Ship was destroyed. Game Over");
+                    }
                 }
             }
 
             __Bullet?.Update();
 
+            __MedKit?.Update();
+
+            if (__Ship != null && __MedKit != null && __MedKit.Collision(__Ship))
+            {
+                logger.LoggerProcess($"{__Ship.Energy} before");
+                __MedKit = null;
+                __Ship.Medicate();
+                logger.LoggerProcess($"{__Ship.Energy} after");
+            }
 
         }
 

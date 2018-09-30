@@ -47,10 +47,12 @@
   <ItemGroup>
     <Compile Include="GameObjects\Asteroid.cs" />
     <Compile Include="GameObjects\Bullet.cs" />
+    <Compile Include="GameObjects\MedKit.cs" />
     <Compile Include="GameObjects\Ship.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameObjects\GameObject.cs" />
     <Compile Include="ICollision.cs" />
+    <Compile Include="LoggerObserver.cs" />
     <Compile Include="LoginWindow.cs">
       <SubType>Form</SubType>
     </Compile>

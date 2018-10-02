@@ -51,6 +51,7 @@
     <Compile Include="Game.cs" />
     <Compile Include="GameObjects\GameObject.cs" />
     <Compile Include="ICollision.cs" />
+    <Compile Include="Infrastructure\GameInfo.cs" />
     <Compile Include="LoginWindow.cs">
       <SubType>Form</SubType>
     </Compile>

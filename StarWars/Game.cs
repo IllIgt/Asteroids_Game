@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 
 namespace StarWars
@@ -10,7 +11,8 @@ namespace StarWars
         private static BufferedGraphicsContext __Context;
         private static readonly Timer __Timer = new Timer { Interval = 100 };
         private static GameObject[] __GameObjects;
-        private static Asteroid[] __Asteroids;
+        private static int __Asteroids_count;
+        private static List<Asteroid> __Asteroids;
         private static Bullet __Bullet;
         public static Ship __Ship;
 
@@ -59,7 +61,7 @@ namespace StarWars
         {
             const int objects_count = 30;
             __GameObjects = new GameObject[objects_count];
-
+            __Asteroids_count = 1;
             for (var i = 0; i < objects_count; i++)
             {
                 __GameObjects[i] = new Star(
@@ -68,17 +70,16 @@ namespace StarWars
                     new Size(5, 5));
             }
 
-            const int asteroids_count = 10;
-            __Asteroids = new Asteroid[asteroids_count];
+            __Asteroids = new List<Asteroid>();
 
             var rnd = new Random();
-            for (var i = 0; i < asteroids_count; i++)
+            for (var i = 0; i < __Asteroids_count; i++)
             {
-                var speed = rnd.Next(3, 50);
-                __Asteroids[i] = new Asteroid(
+                var speed = rnd.Next(3, 12);
+                __Asteroids.Add(new Asteroid(
                     new Point(100, rnd.Next(0, Height)),
                     new Point(-speed, speed),
-                    new Size(speed, speed));
+                    new Size(speed + 5, speed + 5)));
             }
             __Bullet = new Bullet(new Point(0, 200), new Size(4, 1));
             __Ship = new Ship(400);
@@ -118,7 +119,7 @@ namespace StarWars
             foreach (var game_object in __GameObjects)
                 game_object.Draw();
 
-            for (var i = 0; i < __Asteroids.Length; i++)
+            for (var i = 0; i < __Asteroids.Count; i++)
                 __Asteroids[i]?.Draw();
 
             __Bullet?.Draw();
@@ -135,14 +136,28 @@ namespace StarWars
                 game_object.Update();
             }
 
-            for (var i = 0; i < __Asteroids.Length; i++)
+            for (var i = 0; i < __Asteroids.Count; i++)
             {
                 var asteroid = __Asteroids[i];
                 if (asteroid == null) continue;
                 asteroid.Update();
                 if (__Bullet != null && asteroid.Collision(__Bullet))
                 {
-                    __Asteroids[i] = null;
+                    __Asteroids.Remove(__Asteroids[i]);
+                    if (__Asteroids.Count == 0)
+                    {
+                        __Asteroids_count ++;
+                        __Asteroids = new List<Asteroid>(__Asteroids_count);
+                        var rnd = new Random();
+                        for (var j = 0; j < __Asteroids_count; j++)
+                        {
+                            var speed = rnd.Next(3, 12);
+                            __Asteroids.Add(new Asteroid(
+                                new Point(100, rnd.Next(0, Height)),
+                                new Point(-speed, speed),
+                                new Size(speed + 5, speed + 5)));
+                        }
+                    }
                     __Bullet = null;
                     System.Media.SystemSounds.Hand.Play();
                     continue;

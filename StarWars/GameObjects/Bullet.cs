@@ -18,7 +18,7 @@ namespace StarWars
 
         public override void Update()
         {
-            _Position.X += 33;
+            _Position.X += 3;
         }
     }
 }
